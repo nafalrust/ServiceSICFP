@@ -20,6 +20,31 @@ class StressFeatureExtractor:
         """
         self.fs = fs
     
+    def bandpass_filter(self, data, lowcut=0.5, highcut=8.0, order=4):
+        """
+        Apply bandpass filter to remove noise outside PPG frequency range.
+        
+        Args:
+            data: Raw PPG signal
+            lowcut: Low cutoff frequency (Hz) - removes baseline drift
+            highcut: High cutoff frequency (Hz) - removes high-frequency noise
+            order: Filter order
+        
+        Returns:
+            Filtered PPG signal
+        """
+        nyquist = 0.5 * self.fs
+        low = lowcut / nyquist
+        high = highcut / nyquist
+        
+        # Design bandpass filter
+        b, a = signal.butter(order, [low, high], btype='band')
+        
+        # Apply zero-phase filter (forward and backward)
+        filtered_data = signal.filtfilt(b, a, data)
+        
+        return filtered_data
+    
     def extract_simple_features(self, signal_data):
         """
         Extract basic statistical features (6 features).

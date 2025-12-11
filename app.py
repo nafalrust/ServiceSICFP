@@ -123,12 +123,15 @@ def predict_bp():
         if len(ppg_signal) < 64:
             return jsonify({'error': 'PPG signal too short (minimum 64 samples)'}), 400
         
+        # Apply bandpass filter to remove noise
+        ppg_filtered = bp_feature_extractor.bandpass_filter(ppg_signal)
+        
         # Extract heart rate metrics
-        hr_metrics = bp_hr_detector.detect_heart_rate(ppg_signal)
+        hr_metrics = bp_hr_detector.detect_heart_rate(ppg_filtered)
         
         # Extract features (no demographics needed)
         features = bp_feature_extractor.extract_all_features(
-            ppg=ppg_signal,
+            ppg=ppg_filtered,
             hr_metrics=hr_metrics
         )
         
@@ -228,12 +231,15 @@ def predict_stress():
         if len(temp_signal) < 4:
             return jsonify({'error': 'Temperature signal too short (minimum 4 samples)'}), 400
         
+        # Apply bandpass filter to PPG signal to remove noise
+        ppg_filtered = stress_feature_extractor.bandpass_filter(ppg_signal)
+        
         # Extract heart rate metrics
-        hr_metrics = stress_hr_detector.detect_heart_rate(ppg_signal)
+        hr_metrics = stress_hr_detector.detect_heart_rate(ppg_filtered)
         
         # Extract features
         features = stress_feature_extractor.extract_all_features(
-            ppg=ppg_signal,
+            ppg=ppg_filtered,
             temp=temp_signal,
             hr_metrics=hr_metrics
         )
@@ -316,12 +322,15 @@ def extract_features_endpoint():
         if len(ppg_signal) < 64:
             return jsonify({'error': 'PPG signal too short (minimum 64 samples)'}), 400
         
-        # Extract heart rate metrics
-        hr_metrics = bp_hr_detector.detect_heart_rate(ppg_signal)
+        # Apply bandpass filter to remove noise
+        ppg_filtered = bp_feature_extractor.bandpass_filter(ppg_signal)
         
-        # Extract features
+        # Extract heart rate metrics
+        hr_metrics = bp_hr_detector.detect_heart_rate(ppg_filtered)
+        
+        # Extract all features
         features = bp_feature_extractor.extract_all_features(
-            ppg=ppg_signal,
+            ppg=ppg_filtered,
             hr_metrics=hr_metrics
         )
         
