@@ -51,8 +51,8 @@ check_models() {
     print_info "Checking model files..."
     
     # BP models
-    if [ ! -f "models/gradient_boosting_bp_model.pkl" ]; then
-        print_warning "BP model not found: models/gradient_boosting_bp_model.pkl"
+    if [ ! -f "models/bp_gradientboost.pkl" ]; then
+        print_warning "BP model not found: models/bp_gradientboost.pkl"
         missing_models=$((missing_models + 1))
     else
         print_success "BP model found"
@@ -66,8 +66,8 @@ check_models() {
     fi
     
     # Stress models
-    if [ ! -f "models/gradient_boosting_stress_model.pkl" ]; then
-        print_warning "Stress model not found: models/gradient_boosting_stress_model.pkl"
+    if [ ! -f "models/stress_gradientboost.pkl" ]; then
+        print_warning "Stress model not found: models/stress_gradientboost.pkl"
         missing_models=$((missing_models + 1))
     else
         print_success "Stress model found"

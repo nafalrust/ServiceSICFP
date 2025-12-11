@@ -18,6 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY feature_extractor.py .
 COPY heart_rate_detector.py .
+COPY stress_feature_extractor.py .
+COPY stress_heart_rate_detector.py .
 
 # Create models directory
 RUN mkdir -p models
@@ -30,7 +32,10 @@ EXPOSE 7860
 
 # Set environment variables
 ENV PORT=7860
-ENV MODEL_PATH=/app/models/catboost_bp_model.pkl
+ENV BP_MODEL_PATH=/app/models/bp_gradientboost.pkl
+ENV BP_SCALER_PATH=/app/models/bp_scaler.pkl
+ENV STRESS_MODEL_PATH=/app/models/stress_gradientboost.pkl
+ENV STRESS_SCALER_PATH=/app/models/stress_scaler.pkl
 ENV PYTHONUNBUFFERED=1
 
 # Health check

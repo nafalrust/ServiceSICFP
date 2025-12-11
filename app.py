@@ -34,9 +34,19 @@ def load_models():
     """Load all trained models and scalers."""
     global bp_model, bp_scaler, stress_model, stress_scaler
     
-    # Load BP model
+    # Load BP model (with feature extractor dependency)
     try:
+        # Import feature extractor to satisfy pickle dependencies
+        import sys
+        from feature_extractor import PPGFeatureExtractor as _PPGFeatureExtractor
+        sys.modules['__main__'].PPGFeatureExtractor = _PPGFeatureExtractor
+        
         bp_model = joblib.load(BP_MODEL_PATH)
+        
+        # If model is dict (contains 'model' key), extract the actual model
+        if isinstance(bp_model, dict) and 'model' in bp_model:
+            bp_model = bp_model['model']
+        
         print(f"✓ BP Model loaded successfully from {BP_MODEL_PATH}")
     except Exception as e:
         print(f"⚠ Warning: Could not load BP model - {str(e)}")

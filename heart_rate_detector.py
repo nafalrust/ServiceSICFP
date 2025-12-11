@@ -187,7 +187,7 @@ class HeartRateDetector:
         # Filter unrealistic heart rates (40-200 BPM)
         valid_mask = (heart_rates >= 40) & (heart_rates <= 200)
         heart_rates_valid = heart_rates[valid_mask]
-        peak_intervals_valid = peak_intervals[:-1][valid_mask]  # Adjust length
+        peak_intervals_valid = peak_intervals[valid_mask]  # Same length as heart_rates
         
         if len(heart_rates_valid) == 0:
             return metrics
